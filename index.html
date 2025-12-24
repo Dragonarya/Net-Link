@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NetLink - Alumni Network</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* ===== HEADER ===== */
+.header {
+  background: #0b3d91;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.logo-img {
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #ffd700;
+}
+
+/* ===== HERO ===== */
+.hero-section {
+  background: linear-gradient(rgba(11,61,145,0.85), rgba(11,61,145,0.85)),
+              url('hero.jpg') center/cover no-repeat;
+  padding: 5rem 2rem;
+  color: white;
+  text-align: center;
+}
+
+.hero-content h2 {
+  font-size: 2.8rem;
+}
+
+.hero-content p {
+  margin: 1rem auto 2rem;
+  max-width: 600px;
+}
+
+.hero-buttons .btn {
+  margin: 10px;
+}
+
+/* ===== BUTTONS ===== */
+.btn {
+  padding: 0.8rem 2rem;
+  border-radius: 30px;
+  cursor: pointer;
+  border: none;
+  position: relative;
+  overflow: hidden;
+  transition: 0.3s;
+}
+
+.primary-btn {
+  background: #ffd700;
+  color: #0b3d91;
+}
+
+.secondary-btn {
+  background: transparent;
+  color: white;
+  border: 2px solid white;
+}
+
+.btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+/* ===== SECTIONS ===== */
+.section {
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.section h2 {
+  color: #0b3d91;
+}
+
+.section h2::after {
+  content: "";
+  width: 60px;
+  height: 4px;
+  background: #ffd700;
+  display: block;
+  margin: 10px auto;
+}
+
+/* ===== CARDS ===== */
+.card-container,
+.job-board {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.card,
+.profile-card,
+.job-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  max-width: 300px;
+  transition: 0.4s;
+}
+
+.card:hover,
+.profile-card:hover,
+.job-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+}
+
+/* ===== DIRECTORY ===== */
+.directory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+  gap: 2rem;
+  max-width: 900px;
+  margin: auto;
+}
+
+.profile-card img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+/* ===== APPLY BUTTON ===== */
+.apply-btn {
+  width: 100%;
+  background: #0b3d91;
+  color: white;
+  margin-top: 1rem;
+}
+
+/* ===== FOOTER ===== */
+.footer {
+  background: #0b3d91;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+}
+
+/* ===== RIPPLE EFFECT ===== */
+.ripple {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: rgba(255,255,255,0.6);
+  border-radius: 50%;
+  transform: scale(0);
+  animation: ripple 0.6s linear;
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(15);
+    opacity: 0;
+  }
+}
+/* ===== CHATBOT CENTER POSITION ===== */
+.chat-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: none;
+  z-index: 999;
+}
+
+.chatbot {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 380px;
+  max-width: 95%;
+  height: 500px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+  display: none;
+  flex-direction: column;
+  z-index: 1000;
+}
+
+/* Header */
+.chat-header {
+  background: #0b3d91;
+  color: white;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 15px 15px 0 0;
+}
+
+/* Body */
+.chat-body {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  font-size: 0.9rem;
+}
+
+/* Input */
+.chat-input {
+  display: flex;
+  border-top: 1px solid #ddd;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  outline: none;
+}
+
+.chat-input button {
+  background: #0b3d91;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+/* Toggle Button */
+.chat-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #0b3d91;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 55px;
+  height: 55px;
+  font-size: 22px;
+  cursor: pointer;
+  z-index: 1001;
+}
+.user-msg {
+  background: #0b3d91;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 12px;
+  margin: 8px 0;
+  max-width: 80%;
+  align-self: flex-end;
+}
+
+.bot-msg {
+  background: #f1f1f1;
+  color: #333;
+  padding: 8px 12px;
+  border-radius: 12px;
+  margin: 8px 0;
+  max-width: 80%;
+  align-self: flex-start;
+}
+
+
+</style>
+</head>
+
+
+<body>
+
+<header class="header">
+  <div class="logo">
+    <img src="logo.jpg" class="logo-img">
+    <h1>NetLink</h1>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#hero" class="nav-link active">Home</a></li>
+    <li><a href="#events" class="nav-link">Events</a></li>
+    <li><a href="#directory" class="nav-link">Directory</a></li>
+    <li><a href="#jobs" class="nav-link">Jobs</a></li>
+    <li><a href="#about" class="nav-link">About</a></li>
+  </ul>
+</header>
+
+<section id="hero" class="hero-section">
+  <div class="hero-content">
+    <h2>Stay Connected, Build Your Future</h2>
+    <p>NetLink connects students and alumni for growth.</p>
+    <div class="hero-buttons">
+      <a href="student-login.html" class="btn primary-btn">Student Login</a>
+      <a href="alumni-login.html" class="btn secondary-btn">Alumni Login</a>
+    </div>
+  </div>
+</section>
+
+<section id="events" class="section">
+ <section id="events" class="section">
+  <h2>Upcoming Tech Events</h2>
+  <div class="card-container">
+    <div class="card">
+      💻 Full Stack Web Development Bootcamp<br>
+      <small>By Industry Experts</small>
+    </div>
+
+    <div class="card">
+      🤖 AI & Machine Learning Webinar<br>
+      <small>Real-World Applications</small>
+    </div>
+
+    <div class="card">
+      ☁️ Cloud Computing & DevOps Session<br>
+      <small>AWS • Azure • Docker</small>
+    </div>
+
+    <div class="card">
+      🔐 Cyber Security & Ethical Hacking Talk<br>
+      <small>Career Opportunities & Skills</small>
+    </div>
+
+    <div class="card">
+      🎯 Resume Building & Interview Prep<br>
+      <small>Guided by Alumni Mentors</small>
+    </div>
+  </div>
+</section>
+
+</section>
+
+<section id="directory" class="section">
+  <h2>Alumni Directory</h2>
+  <input
+  type="text"
+  id="searchInput"
+  placeholder="Search alumni by name..."
+  style="
+    padding: 12px;
+    width: 300px;
+    max-width: 90%;
+    margin: 20px auto;
+    display: block;
+    border-radius: 25px;
+    border: 1px solid #ccc;
+    outline: none;
+  "
+>
+
+  <div class="directory-grid">
+    <div class="profile-card"><img src="john1.webp"><h3>John</h3></div>
+    <div class="profile-card"><img src="priya.jpg"><h3>Priya</h3></div>
+    <div class="profile-card"><img src="rahul.webp"><h3>Rahul</h3></div>
+  </div>
+</section>
+
+<section id="jobs" class="section">
+  <section id="jobs" class="section">
+  <h2>Job Opportunities</h2>
+
+  <div class="job-board">
+
+    <div class="job-card">
+      <h3>Frontend Developer</h3>
+      <p>📍 Location: Remote</p>
+      <p>🛠 Skills: HTML, CSS, JavaScript, React</p>
+      <p>👤 Posted by: Alumni (Google)</p>
+      <button class="btn apply-btn" onclick="openApply()">Apply</button>
+
+    </div>
+
+    <div class="job-card">
+      <h3>Backend Developer</h3>
+      <p>📍 Location: Bengaluru</p>
+      <p>🛠 Skills: Node.js, Express, MongoDB</p>
+      <p>👤 Posted by: Alumni (Startup)</p>
+      <button class="btn apply-btn" onclick="openApply()">Apply</button>
+
+    </div>
+
+    <div class="job-card">
+      <h3>Data Analyst</h3>
+      <p>📍 Location: Hyderabad</p>
+      <p>🛠 Skills: Python, SQL, Power BI</p>
+      <p>👤 Posted by: Alumni (TCS)</p>
+      <button class="btn apply-btn" onclick="openApply()">Apply</button>
+
+    </div>
+
+    <div class="job-card">
+      <h3>AI / ML Engineer</h3>
+      <p>📍 Location: Remote</p>
+      <p>🛠 Skills: Python, ML, TensorFlow</p>
+      <p>👤 Posted by: Alumni (Microsoft)</p>
+      <button class="btn apply-btn" onclick="openApply()">Apply</button>
+
+    </div>
+
+    <div class="job-card">
+      <h3>Cyber Security Analyst</h3>
+      <p>📍 Location: Pune</p>
+      <p>🛠 Skills: Network Security, Ethical Hacking</p>
+      <p>👤 Posted by: Alumni (Infosys)</p>
+      <button class="btn apply-btn">Apply</button>
+    </div>
+
+    <div class="job-card">
+      <h3>Cloud Engineer</h3>
+      <p>📍 Location: Chennai</p>
+      <p>🛠 Skills: AWS, Azure, DevOps</p>
+      <p>👤 Posted by: Alumni (Amazon)</p>
+      <button class="btn apply-btn">Apply</button>
+    </div>
+
+  </div>
+</section>
+
+</section>
+<!-- ===== AI CHATBOT ===== -->
+
+ <div class="chat-overlay" id="chatOverlay"></div>
+
+<div class="chatbot">
+  <div class="chat-header">
+    <span>NetLink AI Assistant</span>
+    <button id="closeChat">✖</button>
+  </div>
+
+  <div class="chat-body" id="chatBody">
+    <div class="bot-msg">
+      👋 Hi! I’m NetLink AI.  
+      Ask me about alumni, jobs, internships, or career guidance.
+    </div>
+  </div>
+
+  <div class="chat-input">
+    <input type="text" id="userInput" placeholder="Type your message..." />
+    <button id="sendBtn">Send</button>
+  </div>
+</div>
+
+<button class="chat-toggle" id="openChat">💬</button>
+
+
+<section id="about" class="section">
+  <h2>About NetLink</h2>
+  <p>A professional alumni networking platform.</p>
+</section>
+
+<!-- ===== ALUMNI HELP SECTION (NEW) ===== -->
+<section id="alumni-help" class="section">
+  <h2>How Alumni Help Students</h2>
+  <p style="max-width: 900px; margin: auto; font-size: 1.1rem;">
+    Alumni play an important role in guiding students toward successful careers.
+    Through NetLink, alumni mentor students, share real industry experiences,
+    and provide career guidance. Alumni also help students by posting job and
+    internship opportunities, conducting mock interviews, and offering
+    professional advice.
+    <br><br>
+    By connecting students with experienced professionals, NetLink reduces the
+    gap between academics and industry and helps students build confidence,
+    skills, and strong professional networks.
+  </p>
+</section>
+
+<footer class="footer">
+  © 2025 NetLink
+</footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  window.addEventListener('scroll', () => {
+    const hero = document.querySelector('.hero-section');
+    hero.style.backgroundPositionY = window.scrollY * 0.3 + 'px';
+  });
+
+  document.querySelectorAll('.btn').forEach(btn => {
+    btn.addEventListener('click', function (e) {
+      const ripple = document.createElement('span');
+      ripple.className = 'ripple';
+      ripple.style.left = e.offsetX + 'px';
+      ripple.style.top = e.offsetY + 'px';
+      this.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 600);
+    });
+  });
+
+});
+const openChat = document.getElementById("openChat");
+const closeChat = document.getElementById("closeChat");
+const chatbot = document.querySelector(".chatbot");
+const overlay = document.getElementById("chatOverlay");
+
+openChat.onclick = () => {
+  chatbot.style.display = "flex";
+  overlay.style.display = "block";
+};
+
+closeChat.onclick = () => {
+  chatbot.style.display = "none";
+  overlay.style.display = "none";
+};
+
+overlay.onclick = () => {
+  chatbot.style.display = "none";
+  overlay.style.display = "none";
+};
+const sendBtn = document.getElementById("sendBtn");
+const userInput = document.getElementById("userInput");
+const chatBody = document.getElementById("chatBody");
+
+sendBtn.onclick = sendMessage;
+userInput.addEventListener("keypress", e => {
+  if (e.key === "Enter") sendMessage();
+});
+
+function sendMessage() {
+  const message = userInput.value.trim();
+  if (message === "") return;
+
+  // User message
+  const userDiv = document.createElement("div");
+  userDiv.className = "user-msg";
+  userDiv.innerText = message;
+  chatBody.appendChild(userDiv);
+
+  userInput.value = "";
+  chatBody.scrollTop = chatBody.scrollHeight;
+
+  // Bot reply delay
+  setTimeout(() => {
+    const botDiv = document.createElement("div");
+    botDiv.className = "bot-msg";
+    botDiv.innerText = getBotReply(message);
+    chatBody.appendChild(botDiv);
+    chatBody.scrollTop = chatBody.scrollHeight;
+  }, 800);
+}
+
+function getBotReply(msg) {
+  msg = msg.toLowerCase();
+
+  if (msg.includes("job")) {
+    return "💼 You can find job opportunities in the Jobs section. Alumni often post openings there.";
+  }
+  if (msg.includes("intern")) {
+    return "🎓 Alumni share internships regularly. Check the Jobs section or connect with alumni.";
+  }
+  if (msg.includes("connect")) {
+    return "🤝 Go to Alumni Directory, search alumni, and click Connect to send a request.";
+  }
+  if (msg.includes("alumni")) {
+    return "👨‍🎓 Our alumni are professionals from different industries ready to guide students.";
+  }
+  if (msg.includes("hello") || msg.includes("hi")) {
+    return "👋 Hello! How can I help you today?";
+  }
+  if (msg.includes("career")) {
+    return "🚀 Alumni provide career guidance, mock interviews, and industry insights.";
+  }
+
+  return "🤖 I can help you with jobs, internships, alumni connections, and career guidance.";
+}
+
+
+</script>
+
+
+</body>
+</html>
